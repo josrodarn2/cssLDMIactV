@@ -1,0 +1,533 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Calculadora Cyberpunk</title>
+    <link href="https://fonts.googleapis.com/css2?family=Orbitron:wght@400;700;900&family=Rajdhani:wght@300;500;700&display=swap" rel="stylesheet">
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Rajdhani', sans-serif;
+            min-height: 100vh;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            position: relative;
+            overflow-x: hidden;
+            overflow-y: auto;
+            padding: 20px 10px;
+        }
+
+        body::before {
+            content: '';
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: url('https://i.giphy.com/media/v1.Y2lkPTc5MGI3NjExcjR3ZDVkN3l5YzFyeGR3aWJpY3Y0ZmZxZm1jbGN4YnNnN3JlZmZwNyZlcD12MV9pbnRlcm5hbF9naWZfYnlfaWQmY3Q9Zw/3oKIPic2BnoVZkRla8/giphy.gif') center/cover no-repeat;
+            filter: brightness(0.4);
+            z-index: -2;
+        }
+
+        body::after {
+            content: '';
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: linear-gradient(135deg, rgba(255, 0, 255, 0.1), rgba(0, 255, 255, 0.1));
+            z-index: -1;
+        }
+
+        .container {
+            background: linear-gradient(135deg, rgba(10, 10, 30, 0.95), rgba(20, 0, 40, 0.9));
+            padding: 40px;
+            border-radius: 20px;
+            box-shadow: 0 0 50px rgba(0, 255, 255, 0.5),
+                        0 0 100px rgba(255, 0, 255, 0.3);
+            border: 2px solid rgba(0, 255, 255, 0.3);
+            backdrop-filter: blur(10px);
+            width: 90%;
+            max-width: 500px;
+            margin: 20px auto;
+            max-height: 90vh;
+            overflow-y: auto;
+            position: relative;
+        }
+
+        .container::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background: url('https://i.giphy.com/media/v1.Y2lkPTc5MGI3NjExNWVtYm16eHFvdTljdnJxNWV6MWZjZmN4OHRvcGplZzBjMGU3ZWc3OSZlcD12MV9pbnRlcm5hbF9naWZfYnlfaWQmY3Q9Zw/l0HlDtKDqfGZy8uAg/giphy.gif') center/cover no-repeat;
+            opacity: 0.08;
+            border-radius: 20px;
+            pointer-events: none;
+            z-index: 0;
+        }
+
+        .container > * {
+            position: relative;
+            z-index: 1;
+        }
+
+        .container::-webkit-scrollbar {
+            width: 8px;
+        }
+
+        .container::-webkit-scrollbar-track {
+            background: rgba(0, 0, 0, 0.3);
+            border-radius: 10px;
+        }
+
+        .container::-webkit-scrollbar-thumb {
+            background: linear-gradient(180deg, #00ffff, #ff00ff);
+            border-radius: 10px;
+        }
+
+        .container::-webkit-scrollbar-thumb:hover {
+            background: linear-gradient(180deg, #00ffff, #ff00ff);
+            box-shadow: 0 0 10px rgba(0, 255, 255, 0.8);
+        }
+
+        h1 {
+            font-family: 'Orbitron', sans-serif;
+            text-align: center;
+            color: #00ffff;
+            font-size: 2.5em;
+            margin-bottom: 30px;
+            text-transform: uppercase;
+            letter-spacing: 3px;
+            text-shadow: 0 0 20px rgba(0, 255, 255, 0.8),
+                         0 0 40px rgba(0, 255, 255, 0.5);
+            animation: glow 2s ease-in-out infinite alternate;
+        }
+
+        @keyframes glow {
+            from {
+                text-shadow: 0 0 20px rgba(0, 255, 255, 0.8),
+                             0 0 40px rgba(0, 255, 255, 0.5);
+            }
+            to {
+                text-shadow: 0 0 30px rgba(0, 255, 255, 1),
+                             0 0 60px rgba(0, 255, 255, 0.8);
+            }
+        }
+
+        .input-group {
+            margin-bottom: 25px;
+        }
+
+        label {
+            display: block;
+            color: #ff00ff;
+            font-size: 1.2em;
+            margin-bottom: 8px;
+            font-weight: 500;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+        }
+
+        input[type="number"],
+        input[type="text"],
+        select {
+            width: 100%;
+            padding: 15px;
+            font-size: 1.1em;
+            background: rgba(0, 0, 0, 0.7);
+            border: 2px solid rgba(0, 255, 255, 0.5);
+            border-radius: 10px;
+            color: #00ffff;
+            font-family: 'Orbitron', sans-serif;
+            transition: all 0.3s ease;
+        }
+
+        input[type="number"]:focus,
+        input[type="text"]:focus,
+        select:focus {
+            outline: none;
+            border-color: #00ffff;
+            box-shadow: 0 0 20px rgba(0, 255, 255, 0.6);
+        }
+
+        input[type="text"]::placeholder {
+            color: rgba(0, 255, 255, 0.4);
+            font-family: 'Rajdhani', sans-serif;
+        }
+
+        select {
+            cursor: pointer;
+            appearance: none;
+            background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='12' height='12' viewBox='0 0 12 12'%3E%3Cpath fill='%2300ffff' d='M6 9L1 4h10z'/%3E%3C/svg%3E");
+            background-repeat: no-repeat;
+            background-position: right 15px center;
+            padding-right: 40px;
+        }
+
+        select option {
+            background: #0a0a1e;
+            color: #00ffff;
+        }
+
+        .result-box {
+            background: rgba(0, 255, 255, 0.1);
+            border: 2px solid #00ffff;
+            border-radius: 10px;
+            padding: 20px;
+            margin-top: 30px;
+            text-align: center;
+        }
+
+        .result-label {
+            color: #ff00ff;
+            font-size: 1.2em;
+            margin-bottom: 10px;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+        }
+
+        .result-value {
+            font-family: 'Orbitron', sans-serif;
+            color: #00ffff;
+            font-size: 2.5em;
+            font-weight: 700;
+            text-shadow: 0 0 15px rgba(0, 255, 255, 0.8);
+        }
+
+        input[type="number"]::-webkit-inner-spin-button,
+        input[type="number"]::-webkit-outer-spin-button {
+            -webkit-appearance: none;
+            margin: 0;
+        }
+
+        input[type="number"] {
+            -moz-appearance: textfield;
+        }
+
+        .nav-buttons {
+            display: flex;
+            gap: 15px;
+            margin-bottom: 30px;
+        }
+
+        .nav-btn {
+            flex: 1;
+            padding: 15px;
+            font-family: 'Orbitron', sans-serif;
+            font-size: 1em;
+            background: rgba(0, 0, 0, 0.7);
+            border: 2px solid rgba(255, 0, 255, 0.5);
+            border-radius: 10px;
+            color: #ff00ff;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+        }
+
+        .nav-btn:hover {
+            background: rgba(255, 0, 255, 0.2);
+            border-color: #ff00ff;
+            box-shadow: 0 0 20px rgba(255, 0, 255, 0.6);
+        }
+
+        .nav-btn.active {
+            background: rgba(255, 0, 255, 0.3);
+            border-color: #ff00ff;
+            box-shadow: 0 0 20px rgba(255, 0, 255, 0.8);
+        }
+
+        .section {
+            display: none;
+        }
+
+        .section.active {
+            display: block;
+        }
+
+        hr {
+            border: none;
+            border-top: 1px solid rgba(255, 0, 255, 0.3);
+            margin: 30px 0;
+        }
+
+        /* Responsive Design */
+        @media (max-width: 768px) {
+            .container {
+                padding: 25px;
+                width: 95%;
+                max-height: 85vh;
+            }
+
+            h1 {
+                font-size: 2em;
+                margin-bottom: 20px;
+            }
+
+            .nav-buttons {
+                flex-direction: column;
+                gap: 10px;
+            }
+
+            .nav-btn {
+                padding: 12px;
+                font-size: 0.9em;
+            }
+
+            label {
+                font-size: 1em;
+            }
+
+            input[type="number"],
+            input[type="text"],
+            select {
+                padding: 12px;
+                font-size: 1em;
+            }
+
+            .result-value {
+                font-size: 2em;
+            }
+
+            h2 {
+                font-size: 1.3em !important;
+            }
+        }
+
+        @media (max-width: 480px) {
+            .container {
+                padding: 20px;
+                width: 98%;
+            }
+
+            h1 {
+                font-size: 1.6em;
+                letter-spacing: 2px;
+            }
+
+            .nav-btn {
+                padding: 10px;
+                font-size: 0.85em;
+            }
+
+            input[type="number"],
+            input[type="text"],
+            select {
+                padding: 10px;
+                font-size: 0.95em;
+            }
+
+            .result-value {
+                font-size: 1.8em;
+            }
+
+            .result-box {
+                padding: 15px;
+            }
+
+            h2 {
+                font-size: 1.1em !important;
+                margin-bottom: 15px !important;
+            }
+        }
+
+        @media (min-height: 900px) {
+            .container {
+                max-height: 95vh;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1>⚡ Calc 2077 ⚡</h1>
+        
+        <div class="nav-buttons">
+            <button class="nav-btn active" onclick="showSection('calculator')">Calculadora</button>
+            <button class="nav-btn" onclick="showSection('converter')">Conversor</button>
+        </div>
+
+        <div id="calculator" class="section active">
+            <div class="input-group">
+                <label for="num1">Número 1</label>
+                <input type="number" id="num1" placeholder="Ingresa el primer número" step="any">
+            </div>
+
+            <div class="input-group">
+                <label for="num2">Número 2</label>
+                <input type="number" id="num2" placeholder="Ingresa el segundo número" step="any">
+            </div>
+
+            <div class="input-group">
+                <label for="operation">Operación</label>
+                <select id="operation">
+                    <option value="">Selecciona una operación</option>
+                    <option value="suma">➕ Suma</option>
+                    <option value="resta">➖ Resta</option>
+                    <option value="multiplicacion">✖️ Multiplicación</option>
+                    <option value="division">➗ División</option>
+                </select>
+            </div>
+
+            <div class="result-box">
+                <div class="result-label">Resultado</div>
+                <div class="result-value" id="result">---</div>
+            </div>
+        </div>
+
+        <div id="converter" class="section">
+            <h2 style="font-family: 'Orbitron', sans-serif; color: #00ffff; text-align: center; font-size: 1.5em; margin-bottom: 20px; text-shadow: 0 0 15px rgba(0, 255, 255, 0.8);">BINARIO → DECIMAL</h2>
+            
+            <div class="input-group">
+                <label for="binaryInput">Número Binario</label>
+                <input type="text" id="binaryInput" placeholder="Ej: 1010">
+            </div>
+
+            <div class="result-box">
+                <div class="result-label">Decimal</div>
+                <div class="result-value" id="binaryResult">---</div>
+            </div>
+
+            <hr>
+
+            <h2 style="font-family: 'Orbitron', sans-serif; color: #00ffff; text-align: center; font-size: 1.5em; margin-bottom: 20px; text-shadow: 0 0 15px rgba(0, 255, 255, 0.8);">DECIMAL → BINARIO</h2>
+            
+            <div class="input-group">
+                <label for="decimalInput">Número Decimal</label>
+                <input type="text" id="decimalInput" placeholder="Ej: 10">
+            </div>
+
+            <div class="result-box">
+                <div class="result-label">Binario</div>
+                <div class="result-value" id="decimalResult">---</div>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        // Función para cambiar de sección
+        function showSection(sectionName) {
+            const sections = document.querySelectorAll('.section');
+            const buttons = document.querySelectorAll('.nav-btn');
+            
+            sections.forEach(section => {
+                section.classList.remove('active');
+            });
+            
+            buttons.forEach(button => {
+                button.classList.remove('active');
+            });
+            
+            document.getElementById(sectionName).classList.add('active');
+            event.target.classList.add('active');
+        }
+
+        // Calculadora
+        const num1Input = document.getElementById('num1');
+        const num2Input = document.getElementById('num2');
+        const operationSelect = document.getElementById('operation');
+        const resultDisplay = document.getElementById('result');
+
+        function calcular() {
+            const num1 = parseFloat(num1Input.value);
+            const num2 = parseFloat(num2Input.value);
+            const operation = operationSelect.value;
+
+            if (isNaN(num1) || isNaN(num2) || operation === '') {
+                resultDisplay.textContent = '---';
+                return;
+            }
+
+            let resultado;
+
+            switch(operation) {
+                case 'suma':
+                    resultado = num1 + num2;
+                    break;
+                case 'resta':
+                    resultado = num1 - num2;
+                    break;
+                case 'multiplicacion':
+                    resultado = num1 * num2;
+                    break;
+                case 'division':
+                    if (num2 === 0) {
+                        resultDisplay.textContent = 'ERROR';
+                        return;
+                    }
+                    resultado = num1 / num2;
+                    break;
+                default:
+                    resultDisplay.textContent = '---';
+                    return;
+            }
+
+            resultDisplay.textContent = resultado.toFixed(2);
+        }
+
+        num1Input.addEventListener('input', calcular);
+        num2Input.addEventListener('input', calcular);
+        operationSelect.addEventListener('change', calcular);
+
+        // Convertidor Binario → Decimal
+        const binaryInput = document.getElementById('binaryInput');
+        const binaryResult = document.getElementById('binaryResult');
+
+        function convertirBinarioADecimal() {
+            const valor = binaryInput.value.trim();
+
+            if (valor === '') {
+                binaryResult.textContent = '---';
+                return;
+            }
+
+            // Validar que solo contenga 0s y 1s
+            if (!/^[01]+$/.test(valor)) {
+                binaryResult.textContent = 'ERROR';
+                return;
+            }
+
+            const resultado = parseInt(valor, 2);
+            binaryResult.textContent = resultado;
+        }
+
+        binaryInput.addEventListener('input', convertirBinarioADecimal);
+
+        // Convertidor Decimal → Binario
+        const decimalInput = document.getElementById('decimalInput');
+        const decimalResult = document.getElementById('decimalResult');
+
+        function convertirDecimalABinario() {
+            const valor = decimalInput.value.trim();
+
+            if (valor === '') {
+                decimalResult.textContent = '---';
+                return;
+            }
+
+            // Validar que sea un número entero
+            const num = parseInt(valor);
+            if (isNaN(num) || num < 0) {
+                decimalResult.textContent = 'ERROR';
+                return;
+            }
+
+            const resultado = num.toString(2);
+            decimalResult.textContent = resultado;
+        }
+
+        decimalInput.addEventListener('input', convertirDecimalABinario);
+    </script>
+</body>
+</html>
